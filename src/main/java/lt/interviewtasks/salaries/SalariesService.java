@@ -2,31 +2,24 @@ package lt.interviewtasks.salaries;
 
 import lt.interviewtasks.salaries.model.Payment;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SalariesService {
 
-    private ArrayList<Payment> unsortedPayments = new ArrayList();
+    private List<Payment> payments = new ArrayList();
+    private Map<String, Integer> paymentsSumAndTaxes = new HashMap();
+    private Map<String, Integer> paymentsSumByType = new HashMap();
 
-    private Comparator<Payment> comparatorByPayment = new Comparator<Payment>() {
+    public void generateReports() {
+        loadPaymentDataFromCsv();
+        processPaymentData();
+        writePaymentSumAndTaxesDataToCsv(paymentsSumAndTaxes);
+        writePaymentSumByTypeDataToCsv(paymentsSumByType);
+    }
 
-        @Override
-        public int compare(Payment payment1, Payment payment2) {
-            int i = payment1.getEmployee().compareTo(payment2.getEmployee());
-            if (i == 0) {
-                return payment1.getPaymentType().compareTo(payment2.getPaymentType());
-            } else {
-            return i;
-            }
-        }
-    };
-
-    public void loadDataFromCsv() {
+    private void loadPaymentDataFromCsv() {
 
         String csvPath = "src/main/resources/static/duomenys.csv";
         BufferedReader bufferedReader;
@@ -45,27 +38,72 @@ public class SalariesService {
                 payment.setEmployee(employeeData[0]);
                 payment.setPaymentType(employeeData[1]);
                 try {
-                    payment.setPaymentAmount(Float.valueOf(employeeData[2]));
+                    payment.setPaymentAmount(Integer.valueOf(employeeData[2]));
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
                 }
-                unsortedPayments.add(payment);
+                payments.add(payment);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        for (Payment payment : unsortedPayments) {
-//            System.out.println(payment.getEmployee() + "," + payment.getPaymentType() + "," + payment.getPaymentAmount());
-//        }
     }
 
-    public void sortPaymentData() {
-        ArrayList<Payment> sortedPayments = unsortedPayments;
-        sortedPayments.sort(comparatorByPayment);
-//        for (Payment payment : sortedPayments) {
-//            System.out.println(payment.getEmployee() + "," + payment.getPaymentType() + "," + payment.getPaymentAmount());
-//        }
+    private void processPaymentData() {
+
+        paymentsSumAndTaxes = payments.stream()
+                .collect(Collectors.groupingBy(Payment::getEmployee, Collectors.summingInt(Payment::getPaymentAmount)));
+
+        for (Payment payment : payments) {
+            payment.setSortingKey();
+        }
+        paymentsSumByType = payments.stream()
+                .collect(Collectors.groupingBy(Payment::getSortingKey, Collectors.summingInt(Payment::getPaymentAmount)));
+    }
+
+    private void writePaymentSumAndTaxesDataToCsv(Map<String, Integer> data) {
+
+        String csvPath = "src/main/resources/static/suma_mokesciai.csv";
+        File file = new File(csvPath);
+        file.getParentFile().mkdirs();
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(file);
+            printWriter.println("Darbuotojas,Suma,Mokesciai");
+            for(Map.Entry<String, Integer> entry : data.entrySet()) {
+                printWriter.println(entry.getKey() + "," + entry.getValue() + "," + entry.getValue()*0.4);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (printWriter != null) {             {
+                printWriter.close();
+            }
+        }
+        }
+    }
+
+    private void writePaymentSumByTypeDataToCsv(Map<String, Integer> data) {
+
+        String csvPath = "src/main/resources/static/suma_tipas.csv";
+        File file = new File(csvPath);
+        file.getParentFile().mkdirs();
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter(file);
+            printWriter.println("Darbuotojas,Tipas,Suma");
+            for(Map.Entry<String, Integer> entry : data.entrySet()) {
+                printWriter.println(entry.getKey() + "," + entry.getValue());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (printWriter != null) {             {
+                printWriter.close();
+            }
+            }
+        }
     }
 }

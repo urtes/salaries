@@ -2,31 +2,40 @@ package lt.interviewtasks.salaries.model;
 
 public class Payment {
 
-    private String Employee;
-    private String PaymentType;
-    private Float PaymentAmount;
+    private String employee;
+    private String paymentType;
+    private Integer paymentAmount;
+    private String sortingKey;
 
     public String getEmployee() {
-        return Employee;
+        return employee;
     }
 
-    public void setEmployee(String name) {
-        Employee = name;
+    public void setEmployee(String employee) {
+        this.employee = employee;
     }
 
     public String getPaymentType() {
-        return PaymentType;
+        return paymentType;
     }
 
     public void setPaymentType(String paymentType) {
-        PaymentType = paymentType;
+        this.paymentType = paymentType;
     }
 
-    public Float getPaymentAmount() {
-        return PaymentAmount;
+    public Integer getPaymentAmount() {
+        return paymentAmount;
     }
 
-    public void setPaymentAmount(Float paymentAmount) {
-        PaymentAmount = paymentAmount;
+    public void setPaymentAmount(Integer paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public String getSortingKey() {
+        return sortingKey;
+    }
+
+    public void setSortingKey() {
+        sortingKey = employee + "," + paymentType;
     }
 }
