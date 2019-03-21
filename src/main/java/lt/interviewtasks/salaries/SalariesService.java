@@ -54,39 +54,42 @@ public class SalariesService {
     private void processPaymentData() {
 
         paymentsSumAndTaxes = payments.stream()
-                .collect(Collectors.groupingBy(Payment::getEmployee, Collectors.summingInt(Payment::getPaymentAmount)));
+                .collect(Collectors.groupingBy(Payment::getEmployee,
+                        Collectors.summingInt(Payment::getPaymentAmount)));
 
-        for (Payment payment : payments) {
-            payment.setSortingKey();
-        }
         paymentsSumByType = payments.stream()
-                .collect(Collectors.groupingBy(Payment::getSortingKey, Collectors.summingInt(Payment::getPaymentAmount)));
+                .map(payment -> {payment.setSortingKey(); return payment;})
+                .collect(Collectors.groupingBy(Payment::getSortingKey,
+                        Collectors.summingInt(Payment::getPaymentAmount)));
     }
 
     private void writePaymentSumAndTaxesDataToCsv(Map<String, Integer> data) {
 
+        Map<String, Integer> sortedData = new TreeMap(data);
         String csvPath = "src/main/resources/static/suma_mokesciai.csv";
         File file = new File(csvPath);
         file.getParentFile().mkdirs();
         PrintWriter printWriter = null;
+        Float taxFactor = 0.4F;
         try {
             printWriter = new PrintWriter(file);
             printWriter.println("Darbuotojas,Suma,Mokesciai");
-            for(Map.Entry<String, Integer> entry : data.entrySet()) {
-                printWriter.println(entry.getKey() + "," + entry.getValue() + "," + entry.getValue()*0.4);
+            for(Map.Entry<String, Integer> entry : sortedData.entrySet()) {
+                printWriter.println(entry.getKey() + ","
+                        + entry.getValue() + ","
+                        + entry.getValue()*taxFactor);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if (printWriter != null) {             {
+            if (printWriter != null) {
                 printWriter.close();
             }
-        }
         }
     }
 
     private void writePaymentSumByTypeDataToCsv(Map<String, Integer> data) {
-
+        Map<String, Integer> sortedData = new TreeMap(data);
         String csvPath = "src/main/resources/static/suma_tipas.csv";
         File file = new File(csvPath);
         file.getParentFile().mkdirs();
@@ -94,15 +97,14 @@ public class SalariesService {
         try {
             printWriter = new PrintWriter(file);
             printWriter.println("Darbuotojas,Tipas,Suma");
-            for(Map.Entry<String, Integer> entry : data.entrySet()) {
+            for(Map.Entry<String, Integer> entry : sortedData.entrySet()) {
                 printWriter.println(entry.getKey() + "," + entry.getValue());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            if (printWriter != null) {             {
+            if (printWriter != null) {
                 printWriter.close();
-            }
             }
         }
     }
