@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SalariesService {
-    // TODO unit tests
 
     private List<Payment> payments = new ArrayList();
     private Map<String, Long> paymentsSumAndTaxes = new HashMap();
@@ -17,7 +16,7 @@ public class SalariesService {
     private final String ERROR_MESSAGE = "Invalid report type";
     public final static String OUTPUT_DELIMITER = ";";
     private final String INPUT_DELIMITER = ",";
-    private final String PATH = "src/main/resources/static/";
+    private final String PATH = "IOFiles/";
     private final String INPUT_FILE = "duomenys.csv";
     private final String OUTPUT_FILE_SUM_TAXES = "suma_mokesciai.csv";
     private final String OUTPUT_FILE_SUM_TYPE = "suma_tipas.csv";
