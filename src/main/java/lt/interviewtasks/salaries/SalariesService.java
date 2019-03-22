@@ -34,6 +34,17 @@ public class SalariesService {
         SUM_TAXES, SUM_TYPE
     }
 
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public Map<String, Long> getPaymentsSumAndTaxes() {
+        return paymentsSumAndTaxes;
+    }
+
+    public Map<String, Long> getPaymentsSumByType() {
+        return paymentsSumByType;
+    }
 
     public void generateReports() {
         loadDataFromCsv();
