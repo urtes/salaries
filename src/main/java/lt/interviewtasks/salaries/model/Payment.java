@@ -1,41 +1,28 @@
 package lt.interviewtasks.salaries.model;
 
+import lt.interviewtasks.salaries.SalariesService;
+
 public class Payment {
 
-    private String employee;
-    private String paymentType;
-    private Integer paymentAmount;
-    private String sortingKey;
+    private final String employee;
+    private final String paymentType;
+    private Long paymentAmount;
+    private String groupingKey;
+
+    public Payment(String employee, String paymentType, Long paymentAmount) {
+        this.employee = employee;
+        this.paymentType = paymentType;
+        this.paymentAmount = paymentAmount;
+        this.groupingKey = this.employee + SalariesService.OUTPUT_DELIMITER + this.paymentType;
+    }
 
     public String getEmployee() {
         return employee;
     }
-
-    public void setEmployee(String employee) {
-        this.employee = employee;
-    }
-
-    public String getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public Integer getPaymentAmount() {
+    public Long getPaymentAmount() {
         return paymentAmount;
     }
-
-    public void setPaymentAmount(Integer paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public String getSortingKey() {
-        return sortingKey;
-    }
-
-    public void setSortingKey() {
-        sortingKey = employee + "," + paymentType;
+    public String getGroupingKey() {
+        return groupingKey;
     }
 }
