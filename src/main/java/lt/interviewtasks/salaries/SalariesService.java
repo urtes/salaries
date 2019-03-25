@@ -16,10 +16,10 @@ public class SalariesService {
     private final String ERROR_MESSAGE = "Invalid report type";
     public final static String OUTPUT_DELIMITER = ";";
     private final String INPUT_DELIMITER = ",";
-    private final String PATH = "IOFiles/";
-    private final String INPUT_FILE = "duomenys.csv";
     private final String OUTPUT_FILE_SUM_TAXES = "suma_mokesciai.csv";
     private final String OUTPUT_FILE_SUM_TYPE = "suma_tipas.csv";
+    private final File INPUT_FILE;
+    private final String PATH;
 
     private final String SUM_TAXES_HEADER = "Darbuotojas" + OUTPUT_DELIMITER
             + "Suma" + OUTPUT_DELIMITER
@@ -45,6 +45,11 @@ public class SalariesService {
         return paymentsSumByType;
     }
 
+    public SalariesService (File inputFile, String path) {
+        this.INPUT_FILE = inputFile;
+        this.PATH = path;
+    }
+
     public void generateReports() {
         loadDataFromCsv();
         processData();
@@ -66,7 +71,7 @@ public class SalariesService {
         String line;
 
         try {
-            bufferedReader = new BufferedReader(new FileReader(PATH + INPUT_FILE));
+            bufferedReader = new BufferedReader(new FileReader(INPUT_FILE));
             bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
                 String[] employeeData = line.split(INPUT_DELIMITER);
@@ -95,11 +100,11 @@ public class SalariesService {
 
         private void writeDataToCsv(Map<String, Long> data,
                                 String header,
-                                String filename,
+                                String fileName,
                                 ReportType reportType) {
 
         Map<String, Long> sortedData = new TreeMap(data);
-        File file = new File(PATH + filename);
+        File file = new File(PATH + fileName);
         file.getParentFile().mkdirs();
         PrintWriter printWriter = null;
         String outputLine = "";
