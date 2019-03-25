@@ -6,8 +6,8 @@ Application is developed in Java, using Gradle.
 
 ## Instalation
 
-To run the application download salaries-1.0.jar file from Releases. In the same directory, where salaries-1.0.jar file is located, create directory named IOFiles and put input file named duomenys.csv into it.
+To run the application download salaries-2.0.jar file from Releases. In the same directory, where salaries-2.0.jar file is located, create directory named IOFiles and put input file (e.g. duomenys.csv) into it.
 
 ## Usage
 
-To start the application go to directory where salaries-1.0.jar file is located and enter `java -jar salaries-1.0.jar`. The application will output two new csv files in IOFiles directory as a result.
+To start the application go to directory where salaries-1.0.jar file is located and enter `java -jar salaries-1.0.jar yourinputfile.csv`. The application will output two new csv files in IOFiles directory as a result.
