@@ -2,6 +2,8 @@ package lt.interviewtasks.salaries;
 
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.*;
 
 public class SalariesServiceTests {
@@ -9,7 +11,8 @@ public class SalariesServiceTests {
     @Test
     public void testSalariesService() {
 
-        SalariesService target = new SalariesService();
+        File inputFile = new File("IOFiles/duomenys.csv");
+        SalariesService target = new SalariesService(inputFile, "IOFiles/");
 
         assertEquals(0, target.getPayments().size());
         assertEquals(0, target.getPaymentsSumAndTaxes().size());
